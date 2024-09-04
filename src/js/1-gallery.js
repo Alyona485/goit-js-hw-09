@@ -1,5 +1,8 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+// Описаний в документації
+import SimpleLightbox from "simplelightbox";
+// Додатковий імпорт стилів
+import "simplelightbox/dist/simple-lightbox.min.css";
+
 
 const images = [
   {
@@ -67,28 +70,62 @@ const images = [
   },
 ];
 
-const imagesContainer = document.querySelector('.gallery');
+// `
+// <li class="gallery-item">
+// 	<a class="gallery-link" href="large-image.jpg">
+// 		<img 
+// 			class="gallery-image" 
+// 			src="small-image.jpg" 
+// 			alt="Image description" 
+// 			/>
+// 	</a>
+// </li>`
 
-const galleryUp = images
-  .map(({ preview, original, description }) => {
-    return `
-      <li class="gallery-item">
-	    <a class="gallery-link" href="${original}">
-		  <img 
-			class="gallery-image" 
-			src="${preview}" 
-			alt="${description}" 
-			/>
-	    </a>
-      </li>
-    `;
-  })
-  .join('');
+// Знаходимо елемент gallery
+const galleryEl = document.querySelector('.js-gallery')
 
-imagesContainer.innerHTML = galleryUp;
+// робимо буфер для додавання елементу одним кроком
+const fragment = document.createDocumentFragment()
 
-const lightbox = new SimpleLightbox('.gallery a', {
+// запускаєм цикл для додавання картинок
+for (const image of images) {
+  
+  // Створюємо новий елемент <li>
+  const listItem = document.createElement('li');
+  listItem.classList.add('gallery-item');
+
+  // Створюємо новий елемент <a>
+  const link = document.createElement('a');
+  link.classList.add('gallery-link');
+  link.href = image.original;
+
+  // Створюємо новий елемент <img>
+  const img = document.createElement('img');
+  img.classList.add('gallery-image');
+  img.src = image.preview;
+  img.alt = image.description;
+  img.width = 360;
+  img.height = 200;
+
+  // Додаємо <img> до <a>
+  link.appendChild(img);
+
+  // Додаємо <a> до <li>
+  listItem.appendChild(link);
+
+  // Додаємо <li> до фрагмента
+  fragment.appendChild(listItem);
+
+}
+
+// додаємо розмітку із буфера в DOOM
+galleryEl.appendChild(fragment)
+
+// Підключаєм нашу бібліотеку
+// Ініціалізація SimpleLightbox
+const simpleLightbox = new SimpleLightbox('.js-gallery a', {
   captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250,
+  captionDelay: 250
 });
+
+
